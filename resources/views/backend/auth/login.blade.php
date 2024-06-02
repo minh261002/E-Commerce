@@ -31,7 +31,8 @@
 
                 <div class="form-group">
                     <label for="email">Địa Chỉ Email</label>
-                    <input type="email" class="form-control" placeholder="Địa Chỉ Email" name="email">
+                    <input type="email" class="form-control" placeholder="Địa Chỉ Email" name="email"
+                        value="{{ old('email') }}">
                     @if ($errors->has('email'))
                         <p class="text-danger">{{ $errors->first('email') }}</p>
                     @endif
