@@ -31,7 +31,7 @@
                     </div>
                 </div>
 
-                <a href="" class="btn btn-danger">Thêm Thành Viên Mới
+                <a href="{{ route('user.create') }}" class="btn btn-danger">Thêm Thành Viên Mới
                     <i class="fa fa-plus"></i>
                 </a>
             </div>

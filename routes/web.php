@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Ajax\LocationController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\AuthController;
@@ -29,7 +30,13 @@ Route::post('login', [AuthController::class, 'login'])->name('auth.login')->midd
 Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
 
 /* users */
-Route::get('user/index', [UserController::class, 'index'])->name('user.index')->middleware('auth.admin');
+Route::group(['prefix' => 'user'], function () {
+    Route::get('index', [UserController::class, 'index'])->name('user.index')->middleware('auth.admin');
+    Route::get('create', [UserController::class, 'create'])->name('user.create')->middleware('auth.admin');
+});
+
+/* ajax */
+Route::get('ajax/location/index', [LocationController::class, 'getLocation'])->name('ajax.location.index')->middleware('auth.admin');
 
 
 Route::get('dashboard/index', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth.admin');
