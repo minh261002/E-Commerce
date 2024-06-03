@@ -33,6 +33,7 @@ Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
 Route::group(['prefix' => 'user'], function () {
     Route::get('index', [UserController::class, 'index'])->name('user.index')->middleware('auth.admin');
     Route::get('create', [UserController::class, 'create'])->name('user.create')->middleware('auth.admin');
+    Route::post('store', [UserController::class, 'store'])->name('user.store')->middleware('auth.admin');
 });
 
 /* ajax */

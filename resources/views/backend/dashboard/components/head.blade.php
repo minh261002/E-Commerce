@@ -18,8 +18,6 @@
 <link href="{{ asset('backend/css/style.css') }}" rel="stylesheet">
 <link href="{{ asset('backend/css/custom.css') }}" rel="stylesheet">
 
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
 @isset($config['css'])
     @foreach ($config['css'] as $css)
         <link href="{{ asset($css) }}" rel="stylesheet">

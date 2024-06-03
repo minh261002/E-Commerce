@@ -7,11 +7,6 @@
   <!-- jQuery UI -->
   <script src="{{ asset('backend/js/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
 
-  <script src="{{ asset('backend/library/library.js') }}"></script>
-  <script src="{{ asset('backend/library/location.js') }}"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
   @isset($config['js'])
       @foreach ($config['js'] as $key => $value)
           {!! '<script src="' . $value . '"></script>' !!}
