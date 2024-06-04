@@ -1,14 +1,15 @@
 <div class="wrapper wrapper-content">
     @include('backend.dashboard.components.breadcrum', ['title' => $config['seo']['create']['title']])
 
-    <form action="{{ route('user.store') }}" class="box" method="POST">
+    @php
+        $url = $config['method'] == 'create' ? route('user.store') : route('user.update', $user->id);
+    @endphp
+
+    <form action="{{ $url }}" class="box" method="POST">
         @csrf
         <div class="wrapper wrapper-content">
             <div class="row">
                 <div class="col-12">
-                    {{-- @foreach ($errors->all() as $error)
-                        <div class="alert alert-danger">{{ $error }}</div>
-                    @endforeach --}}
                     @if ($errors->all())
                         <div class="alert alert-danger">
                             @foreach ($errors->all() as $error)
@@ -44,7 +45,7 @@
                                     <div class="form-row">
                                         <label for="email">Email <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="email" name="email"
-                                            value="{{ old('email') }}">
+                                            value="{{ old('email', $user->email ?? '') }}">
                                     </div>
                                 </div>
 
@@ -52,16 +53,29 @@
                                     <div class="form-row">
                                         <label for="name">Họ Và Tên <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="name" name="name"
-                                            value="{{ old('name') }}">
+                                            value="{{ old('name', $user->name ?? '') }}">
                                     </div>
                                 </div>
+                                @php
+                                    $user_catalouge_id = [
+                                        'Chọn Nhóm Thành Viên',
+                                        'Quản Trị Viên',
+                                        'Cộng Tác Viên',
+                                        'Nhân Viên',
+                                    ];
+                                @endphp
 
                                 <div class="col-lg-6 mb20">
                                     <div class="form-row">
                                         <label for="">Nhóm Thành Viên <span class="text-danger">*</span></label>
                                         <select name="user_catalouge_id" class="form-control">
-                                            <option value="">Chọn Nhóm Thành Viên</option>
-                                            <option value="1">Admin</option>
+                                            @foreach ($user_catalouge_id as $key => $item)
+                                                <option
+                                                    {{ $key == old('user_catalogue_id', isset($user->user_catalogue_id) ? $user->user_catalogue_id : '') ? 'selected' : '' }}
+                                                    value="{{ $key }}">
+                                                    {{ $item }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -70,25 +84,27 @@
                                     <div class="form-row">
                                         <label for="birthday">Ngày Sinh</label>
                                         <input type="date" class="form-control" id="birthday" name="birthday"
-                                            value="{{ old('birthday') }}">
+                                            value="{{ old('birthday', isset($user->birthday) ? date('Y-m-d', strtotime($user->birthday)) : '') }}">
                                     </div>
                                 </div>
 
-                                <div class="col-lg-6 mb20">
-                                    <div class="form-row">
-                                        <label for="password">Mật Khẩu <span class="text-danger">*</span></label>
-                                        <input type="password" class="form-control" id="password" name="password">
+                                @if ($config['method'] == 'create')
+                                    <div class="col-lg-6 mb20">
+                                        <div class="form-row">
+                                            <label for="password">Mật Khẩu <span class="text-danger">*</span></label>
+                                            <input type="password" class="form-control" id="password" name="password">
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="col-lg-6 mb20">
-                                    <div class="form-row">
-                                        <label for="password_confirmation">Nhập Lại Mật Khẩu <span
-                                                class="text-danger">*</span></label>
-                                        <input type="password_confirmation" class="form-control"
-                                            id="password_confirmation" name="password_confirmation">
+                                    <div class="col-lg-6 mb20">
+                                        <div class="form-row">
+                                            <label for="password_confirmation">Nhập Lại Mật Khẩu <span
+                                                    class="text-danger">*</span></label>
+                                            <input type="password_confirmation" class="form-control"
+                                                id="password_confirmation" name="password_confirmation">
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -145,21 +161,24 @@
                                 <div class="col-lg-12 mb20">
                                     <div class="form-row">
                                         <label for="address">Địa Chỉ Cụ Thể</label>
-                                        <input type="text" class="form-control" id="address" name="address">
+                                        <input type="text" class="form-control" id="address" name="address"
+                                            value="{{ old('address', $user->address ?? '') }}">
                                     </div>
                                 </div>
 
                                 <div class="col-lg-6 mb20">
                                     <div class="form-row">
                                         <label for="phone">Số Điện Thoại</label>
-                                        <input type="text" class="form-control" id="phone" name="phone">
+                                        <input type="text" class="form-control" id="phone" name="phone"
+                                            value="{{ old('phone', $user->phone ?? '') }}">
                                     </div>
                                 </div>
 
                                 <div class="col-lg-6 mb20">
                                     <div class="form-row">
                                         <label for="">Ghi Chú</label>
-                                        <input type="text" class="form-control" name="note">
+                                        <input type="text" class="form-control" name="description"
+                                            value="{{ old('description', $user->description ?? '') }}">
                                     </div>
                                 </div>
                             </div>
@@ -176,7 +195,7 @@
 </div>
 
 <script>
-    var province_id = '{{ old('province_id') }}';
-    var district_id = '{{ old('district_id') }}';
-    var ward_id = '{{ old('ward_id') }}';
+    var province_id = '{{ isset($user->province_id) ? $user->province_id : old('province_id') }}';
+    var district_id = '{{ isset($user->district_id) ? $user->district_id : old('district_id') }}';
+    var ward_id = '{{ isset($user->ward_id) ? $user->ward_id : old('ward_id') }}';
 </script>

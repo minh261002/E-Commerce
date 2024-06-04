@@ -34,6 +34,10 @@ Route::group(['prefix' => 'user'], function () {
     Route::get('index', [UserController::class, 'index'])->name('user.index')->middleware('auth.admin');
     Route::get('create', [UserController::class, 'create'])->name('user.create')->middleware('auth.admin');
     Route::post('store', [UserController::class, 'store'])->name('user.store')->middleware('auth.admin');
+    Route::get('{id}/edit', [UserController::class, 'edit'])->name('user.edit')->middleware('auth.admin');
+    Route::post('{id}/update', [UserController::class, 'update'])->name('user.update')->middleware('auth.admin');
+    Route::get('{id}/delete', [UserController::class, 'delete'])->name('user.delete')->middleware('auth.admin');
+    Route::delete('{id}/delete', [UserController::class, 'destroy'])->name('user.destroy')->middleware('auth.admin');
 });
 
 /* ajax */

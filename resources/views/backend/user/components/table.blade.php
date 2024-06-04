@@ -23,13 +23,14 @@
                 <td>{{ $user->phone }}</td>
                 <td>{{ $user->address }}</td>
                 <td>
-                    <input type="checkbox" class="js-switch" checked />
+                    <input type="checkbox" value="{{ $user->publish }}" class="js-switch"
+                        {{ $user->publish == 1 ? 'checked' : '' }} />
                 </td>
                 <td>
-                    <a href="" class="btn btn-success">
+                    <a href="{{ route('user.edit', $user->id) }}" class="btn btn-success">
                         <i class="fa fa-edit"></i>
                     </a>
-                    <a href="" class="btn btn-danger">
+                    <a href="{{ route('user.delete', $user->id) }}" class="btn btn-danger delete-item">
                         <i class="fa fa-trash"></i>
                     </a>
                 </td>

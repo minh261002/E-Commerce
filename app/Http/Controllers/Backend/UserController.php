@@ -4,22 +4,27 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Services\Interfaces\UserServiceInterface as UserService;
 use App\Repositories\Interfaces\ProvinceRepositoryInterface as ProvinceService;
+use App\Repositories\Interfaces\UserRepositoryInterface as UserRepository;
 
 class UserController extends Controller
 {
     protected $userService;
     protected $provinceRepository;
+    protected $userRepository;
 
     public function __construct(
         UserService $userService,
-        ProvinceService $provinceRepository
+        ProvinceService $provinceRepository,
+        UserRepository $userRepository
     ) {
         $this->userService = $userService;
         $this->provinceRepository = $provinceRepository;
+        $this->userRepository = $userRepository;
     }
 
     public function index()
@@ -37,6 +42,7 @@ class UserController extends Controller
         $layoutContent = 'backend.user.create';
         $config = $this->config();
         $config['seo'] = config('app.user');
+        $config['method'] = 'create';
         return view('backend.dashboard.layouts', compact('layoutContent', 'config', 'provinces'));
     }
 
@@ -46,6 +52,46 @@ class UserController extends Controller
             return redirect()->route('user.index')->with('success', 'Thêm thành viên mới thành công');
         }
         return redirect()->back()->with('error', 'Đã có lỗi xảy ra');
+    }
+
+    public function edit($id)
+    {
+        $user = $this->userRepository->findById($id);
+        $provinces = $this->provinceRepository->all();
+
+        $config = $this->config();
+        $config['seo'] = config('app.user');
+        $config['method'] = 'edit';
+
+        $layoutContent = 'backend.user.create';
+
+        return view('backend.dashboard.layouts', compact('layoutContent', 'config', 'provinces', 'user'));
+    }
+
+    public function update(UpdateUserRequest $request, $id)
+    {
+        if ($this->userService->update($id, $request)) {
+            return redirect()->route('user.index')->with('success', 'Cập nhật thành viên thành công');
+        }
+
+        return redirect()->back()->with('error', 'Đã có lỗi xảy ra, vui lòng thử lại sau');
+    }
+
+    public function delete(Request $request, $id)
+    {
+        $user = $this->userRepository->findById($id);
+        $config = $this->config();
+        $config['seo'] = config('app.user');
+
+        $layoutContent = 'backend.user.delete';
+
+        return view('backend.dashboard.layouts', compact('layoutContent', 'config', 'user'));
+    }
+
+    public function destroy(Request $request, $id){
+        if($this->userService->delete($id)){
+            return redirect()->route('user.index')->with('success', 'Xóa thành viên thành công');
+        }
     }
 
     private function config()
