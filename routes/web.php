@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Ajax\LocationController;
-use App\Http\Controllers\Backend\DashboardController;
+use App\Http\Controllers\Backend\DashboardController ;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\AuthController;
 
@@ -42,7 +42,7 @@ Route::group(['prefix' => 'user'], function () {
 
 /* ajax */
 Route::get('ajax/location/index', [LocationController::class, 'getLocation'])->name('ajax.location.index')->middleware('auth.admin');
-
-
+Route::post('ajax/dashboard/changeStatus', [\App\Http\Controllers\Ajax\DashboardController::class, 'changeStatus'])->name('ajax.dashboard.changeStatus')->middleware('auth.admin');
+Route::post('ajax/dashboard/changeStatusAll', [\App\Http\Controllers\Ajax\DashboardController::class, 'changeStatusAll'])->name('ajax.dashboard.changeStatusAll')->middleware('auth.admin');
 Route::get('dashboard/index', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth.admin');
 /*============================== BACKEND ROUTES ==============================*/

@@ -21,9 +21,12 @@ class UserService implements UserServiceInterface
         $this->userRepository = $userRepository;
     }
 
-    public function paginate()
+
+    public function paginate($request)
     {
-        return $this->userRepository->pagination(['*']);
+        $condition['keyword'] = addslashes($request->get('keyword'));
+        $perPage = $request->integer('perpage');
+        return $this->userRepository->pagination($this->paginateSelect(), $condition, [], ['path' => 'user/index'], $perPage, );
     }
 
     public function create($request)
@@ -62,6 +65,36 @@ class UserService implements UserServiceInterface
         }
     }
 
+    public function updateStatus($post = [])
+    {
+        DB::beginTransaction();
+        try {
+            $payload[$post['field']] = ($post['value'] == 1) ? 0 : 1;
+            $user = $this->userRepository->update($post['modelId'], $payload);
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            echo $e->getMessage();
+            return false;
+        }
+    }
+
+    public function updateStatusAll($post = [])
+    {
+        DB::beginTransaction();
+        try {
+            $payload[$post['field']] = $post['value'];
+            $user = $this->userRepository->updateByWhereIn('id', $post['id'], $payload);
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            echo $e->getMessage();
+            return false;
+        }
+    }
+
     public function delete($id)
     {
         DB::beginTransaction();
@@ -83,5 +116,18 @@ class UserService implements UserServiceInterface
         $birthday = $carbonDate->format('Y-m-d H:i:s');
 
         return $birthday;
+    }
+
+
+    private function paginateSelect()
+    {
+        return [
+            'id',
+            'name',
+            'email',
+            'phone',
+            'address',
+            'publish',
+        ];
     }
 }

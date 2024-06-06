@@ -27,9 +27,9 @@ class UserController extends Controller
         $this->userRepository = $userRepository;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $users = $this->userService->paginate();
+        $users = $this->userService->paginate($request);
         $config = $this->config();
         $config['seo'] = config('app.user');
         $layoutContent = 'backend.user.index';
@@ -88,8 +88,9 @@ class UserController extends Controller
         return view('backend.dashboard.layouts', compact('layoutContent', 'config', 'user'));
     }
 
-    public function destroy(Request $request, $id){
-        if($this->userService->delete($id)){
+    public function destroy(Request $request, $id)
+    {
+        if ($this->userService->delete($id)) {
             return redirect()->route('user.index')->with('success', 'Xóa thành viên thành công');
         }
     }

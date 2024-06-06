@@ -1,4 +1,4 @@
-<table class="table table-striped">
+<table class="table ">
     <thead>
         <tr>
             <th>
@@ -16,14 +16,15 @@
         @foreach ($users as $user)
             <tr>
                 <td>
-                    <input type="checkbox" value="">
+                    <input type="checkbox" class="checkBoxItem" value="{{ $user->id }}">
                 </td>
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->phone }}</td>
                 <td>{{ $user->address }}</td>
-                <td>
-                    <input type="checkbox" value="{{ $user->publish }}" class="js-switch"
+                <td class="js-switch-{{ $user->id }}">
+                    <input type="checkbox" value="{{ $user->publish }}" class="js-switch status" data-model="User"
+                        data-field="publish" data-modelId="{{ $user->id }}"
                         {{ $user->publish == 1 ? 'checked' : '' }} />
                 </td>
                 <td>

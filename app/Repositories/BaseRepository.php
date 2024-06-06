@@ -17,17 +17,26 @@ class BaseRepository implements BaseRepositoryInterface
         $this->model = $model;
     }
 
-    public function pagination($column = ['*'], $condition = [], $join = [], $perpage = 10)
-    {
+    public function pagination(
+        array $column = ['*'],
+        array $condition = [],
+        array $join = [],
+        array $extend = [],
+        int $perpage = 10
+    ) {
         $query = $this->model
-                ->select($column)
-                ->where($condition);
-        if(isset($join) && !empty($join)) {
+            ->select($column)
+            ->where(function ($queryWhere) use ($condition) {
+                if (isset($condition['keyword']) && !empty($condition['keyword'])) {
+                    $queryWhere->where('name', 'like', '%' . $condition['keyword'] . '%');
+                }
+            });
+        if (isset($join) && !empty($join)) {
             $query->join(...$join);
         }
 
-        return $query->paginate($perpage);
-     }
+        return $query->paginate($perpage)->withQueryString()->withPath(env("APP_URL") . $extend['path']);
+    }
 
     public function create(array $payload = [])
     {
@@ -39,6 +48,11 @@ class BaseRepository implements BaseRepositoryInterface
     {
         $model = $this->findById($id);
         return $model->update($payload);
+    }
+
+    public function updateByWhereIn(string $whereInField = '', array $whereIn = [], array $payload = [])
+    {
+        return $this->model->whereIn($whereInField, $whereIn)->update($payload);
     }
 
     public function delete(int $id)
