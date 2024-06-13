@@ -22,14 +22,27 @@ class BaseRepository implements BaseRepositoryInterface
         array $condition = [],
         array $join = [],
         array $extend = [],
-        int $perpage = 10
+        int $perpage = 10,
+        array $relations = []
     ) {
         $query = $this->model
             ->select($column)
-            ->where(function ($queryWhere) use ($condition) {
+            ->where(function ($query) use ($condition) {
                 if (isset($condition['keyword']) && !empty($condition['keyword'])) {
-                    $queryWhere->where('name', 'like', '%' . $condition['keyword'] . '%');
+                    $query->where('name', 'like', '%' . $condition['keyword'] . '%');
                 }
+
+                if (isset($condition['publish']) && $condition['publish'] != -1) {
+                    $query->where('publish', '=', $condition['publish']);
+                }
+
+                if (isset($relations) && !empty($relations)) {
+                    foreach ($relations as $relation) {
+                        $query->withCount($relation);
+                    }
+                }
+
+                return $query;
             });
         if (isset($join) && !empty($join)) {
             $query->join(...$join);

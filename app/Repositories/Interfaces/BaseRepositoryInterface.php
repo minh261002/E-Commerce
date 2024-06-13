@@ -19,6 +19,7 @@ interface BaseRepositoryInterface
         array $join = [],
         array $extend = [],
         int $perpage = 10,
+        array $relations = []
     );
 
 }

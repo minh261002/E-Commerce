@@ -73,11 +73,17 @@
                         if (res.status == 200) {
                             let cssActive1 = 'box-shadow: rgb(38, 185, 154) 0px 0px 0px 16px inset; border-color: rgb(38, 185, 154); background-color: rgb(38, 185, 154); transition: border 0.4s ease 0s, box-shadow 0.4s ease 0s, background-color 1.2s ease 0s;';
                             let cssActive2 = 'left: 20px; transition: background-color 0.4s ease 0s, left 0.2s ease 0s; background-color: rgb(255, 255, 255);';
-
+                            let cssUnActive1 = 'box-shadow: rgb(223, 223, 223) 0px 0px 0px 0px inset; border-color: rgb(223, 223, 223); background-color: rgb(255, 255, 255); transition: border 0.4s ease 0s, box-shadow 0.4s ease 0s;';
+                            let cssUnActive2 = 'left: 0px; transition: background-color 0.4s ease 0s, left 0.2s ease 0s;'
                             if (option.value == 1) {
                                 for (let i = 0; i < id.length; i++) {
                                     $('.js-switch-' + id[i]).find('span.switchery').attr('style', cssActive1).find('small').attr('style', cssActive2);
                                     $('.js-switch-' + id[i]).find('input').prop('checked', true);
+                                }
+                            } else {
+                                for (let i = 0; i < id.length; i++) {
+                                    $('.js-switch-' + id[i]).find('span.switchery').attr('style', cssUnActive1).find('small').attr('style', cssUnActive2);
+                                    $('.js-switch-' + id[i]).find('input').prop('checked', false);
                                 }
                             }
                         }

@@ -32,14 +32,14 @@ class UserController extends Controller
         $users = $this->userService->paginate($request);
         $config = $this->config();
         $config['seo'] = config('app.user');
-        $layoutContent = 'backend.user.index';
+        $layoutContent = 'backend.user.user.index';
         return view('backend.dashboard.layouts', compact('layoutContent', 'config', 'users'));
     }
 
     public function create()
     {
         $provinces = $this->provinceRepository->all();
-        $layoutContent = 'backend.user.create';
+        $layoutContent = 'backend.user.user.create';
         $config = $this->config();
         $config['seo'] = config('app.user');
         $config['method'] = 'create';
@@ -48,10 +48,22 @@ class UserController extends Controller
 
     public function store(StoreUserRequest $request)
     {
-        if ($this->userService->create($request)) {
-            return redirect()->route('user.index')->with('success', 'Thêm thành viên mới thành công');
+        // try {
+        //     if ($this->userService->create($request)) {
+        //         return redirect()->route('user.index')->with('success', 'Thêm thành viên mới thành công');
+        //     }
+        // } catch (\Exception $e) {
+        //     dd($e);
+        //     return redirect()->back()->with('error', 'Đã có lỗi xảy ra');
+        // }
+        // return redirect()->back()->with('error', 'Đã có lỗi xảy ra');
+        try {
+            if ($this->userService->create($request)) {
+                return redirect()->route('user.index')->with('success', 'Thêm thành viên mới thành công');
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Đã có lỗi xảy ra');
         }
-        return redirect()->back()->with('error', 'Đã có lỗi xảy ra');
     }
 
     public function edit($id)
@@ -63,7 +75,7 @@ class UserController extends Controller
         $config['seo'] = config('app.user');
         $config['method'] = 'edit';
 
-        $layoutContent = 'backend.user.create';
+        $layoutContent = 'backend.user.user.create';
 
         return view('backend.dashboard.layouts', compact('layoutContent', 'config', 'provinces', 'user'));
     }
@@ -83,7 +95,7 @@ class UserController extends Controller
         $config = $this->config();
         $config['seo'] = config('app.user');
 
-        $layoutContent = 'backend.user.delete';
+        $layoutContent = 'backend.user.user.delete';
 
         return view('backend.dashboard.layouts', compact('layoutContent', 'config', 'user'));
     }

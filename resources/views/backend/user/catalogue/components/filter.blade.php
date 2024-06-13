@@ -1,4 +1,4 @@
-<form action="{{ route('user.index') }}" method="GET">
+<form action="{{ route('user.catalogue.index') }}" method="GET">
 
     <div class="filter-wrapper">
         <div class="uk-flex uk-flex-middle uk-flex-space-between">
@@ -16,9 +16,12 @@
 
             <div class="action">
                 <div class="uk-flex uk-flex-middle">
-                    <select name="user_catalouge_id" class="form-control mr10">
-                        <option value="0" selected>Chọn Nhóm Thành Viên</option>
-                        <option value="1">Quản Trị Viên</option>
+                    <select name="publish" class="form-control mr10 select2">
+                        @foreach (config('app.general.publish') as $key => $item)
+                            <option value="{{ $key }}" {{ $key == request('publish') ? 'selected' : '' }}>
+                                {{ $item }}
+                            </option>
+                        @endforeach
                     </select>
 
                     <div class="uk-search uk-flex uk-flex-middle mr10">
@@ -33,7 +36,7 @@
                         </div>
                     </div>
 
-                    <a href="{{ route('user.create') }}" class="btn btn-danger">Thêm Thành Viên Mới
+                    <a href="{{ route('user.catalogue.create') }}" class="btn btn-danger">Thêm Nhóm Thành Viên Mới
                         <i class="fa fa-plus"></i>
                     </a>
                 </div>

@@ -14,14 +14,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // DB::table('users')->insert([
-        //     'name' => 'admin',
-        //     'email' => 'admin@gmail.com',
-        //     'password' => Hash::make('admin'),
-        // ]);
+        DB::table('users')->insert([
+            'name' => 'admin',
+            'user_catalogue_id' => 1, // 1 is 'admin' and 2 is 'user
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('admin'),
+        ]);
 
         $this->call([
-            UserSeeder::class,
         ]);
     }
 }
