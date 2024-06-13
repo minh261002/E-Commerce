@@ -23,8 +23,8 @@
                     {{ $user->users->count() }}
                 </td>
                 <td class="js-switch-{{ $user->id }}">
-                    <input type="checkbox" value="{{ $user->publish }}" class="js-switch status" data-model="User"
-                        data-field="publish" data-modelId="{{ $user->id }}"
+                    <input type="checkbox" value="{{ $user->publish }}" class="js-switch status"
+                        data-model="UserCatalogue" data-field="publish" data-modelId="{{ $user->id }}"
                         {{ $user->publish == 1 ? 'checked' : '' }} />
                 </td>
                 <td>

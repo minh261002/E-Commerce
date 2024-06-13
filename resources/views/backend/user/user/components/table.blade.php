@@ -5,6 +5,7 @@
                 <input type="checkbox" value="" id="checkAll">
             </th>
             <th>Họ Và Tên</th>
+            <th>Nhóm Thành Viên</th>
             <th>Email</th>
             <th>Số Điện Thoại</th>
             <th>Địa Chỉ</th>
@@ -19,6 +20,7 @@
                     <input type="checkbox" class="checkBoxItem" value="{{ $user->id }}">
                 </td>
                 <td>{{ $user->name }}</td>
+                <td>{{ $user->user_catalogues->name }}</td>
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->phone }}</td>
                 <td>{{ $user->address }}</td>

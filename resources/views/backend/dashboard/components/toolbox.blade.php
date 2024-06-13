@@ -11,7 +11,7 @@
                 Publish All</a>
         </li>
         <li><a data-model="{{ $model }}" href="#" class="changeStatusAll" data-field="publish"
-                data-model="User" data-value="0">Config
+                data-model="User" data-value="0">
                 UnPublish All</a>
         </li>
     </ul>

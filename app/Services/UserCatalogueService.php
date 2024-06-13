@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Services\Interfaces\UserCatalogueServiceInterface;
 use App\Repositories\Interfaces\UserCatalogueRepositoryInterface as UserCatalogueRepository;
+use App\Repositories\Interfaces\UserRepositoryInterface as UserRepository;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -13,9 +14,9 @@ use Illuminate\Support\Facades\DB;
 class UserCatalogueService implements UserCatalogueServiceInterface
 {
     public function __construct(
+        protected UserRepository $userRepository,
         protected UserCatalogueRepository $userCatalogueRepository
     ) {
-        $this->userCatalogueRepository = $userCatalogueRepository;
     }
 
 
@@ -74,8 +75,28 @@ class UserCatalogueService implements UserCatalogueServiceInterface
     {
         DB::beginTransaction();
         try {
+            $payload = [];
             $payload[$post['field']] = ($post['value'] == 1) ? 0 : 1;
-            $user = $this->userCatalogueRepository->update($post['modelId'], $payload);
+            $this->userCatalogueRepository->update($post['modelId'], $payload);
+            $this->changeStatus($post, $payload[$post['field']]);
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            return false;
+        }
+    }
+
+
+
+    public function updateStatusAll($post = [])
+    {
+        DB::beginTransaction();
+        try {
+            $payload[$post['field']] = $post['value'];
+            $user = $this->userCatalogueRepository->updateByWhereIn('id', $post['id'], $payload);
+            $this->changeStatus($post, $post['value']);
             DB::commit();
             return true;
         } catch (\Exception $e) {
@@ -85,20 +106,29 @@ class UserCatalogueService implements UserCatalogueServiceInterface
         }
     }
 
-    public function updateStatusAll($post = [])
+    public function changeStatus($post, $value)
     {
         DB::beginTransaction();
         try {
-            $payload[$post['field']] = $post['value'];
-            $user = $this->userCatalogueRepository->updateByWhereIn('id', $post['id'], $payload);
+            $array = [];
+            if (isset($post['modelId'])) {
+                $array[] = $post['modelId'];
+            } else {
+                $array = $post['id'];
+            }
+
+            $payload[$post['field']] = $post['value'] == 1 ? 0 : 1;
+            $this->userRepository->updateByWhereIn('user_catalogue_id', $array, $payload);
             DB::commit();
             return true;
         } catch (\Exception $e) {
             DB::rollBack();
+            // Log::error($e->getMessage());
             echo $e->getMessage();
-            return false;
+            die();
         }
     }
+
 
     public function delete($id)
     {
@@ -121,6 +151,7 @@ class UserCatalogueService implements UserCatalogueServiceInterface
             'id',
             'name',
             'description',
+            'publish'
         ];
     }
 }

@@ -89,6 +89,7 @@ class UserService implements UserServiceInterface
         try {
             $payload[$post['field']] = $post['value'];
             $user = $this->userRepository->updateByWhereIn('id', $post['id'], $payload);
+
             DB::commit();
             return true;
         } catch (\Exception $e) {
@@ -131,6 +132,7 @@ class UserService implements UserServiceInterface
             'phone',
             'address',
             'publish',
+            'user_catalogue_id',
         ];
     }
 }

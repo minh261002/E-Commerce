@@ -38,7 +38,9 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
                 ) {
                     $queryWhere->where('publish', $condition['publish']);
                 }
-            });
+
+                return $queryWhere;
+            })->with('user_catalogues');
         if (isset($join) && !empty($join)) {
             $query->join(...$join);
         }
