@@ -1,3 +1,7 @@
+@php
+    $segment = Request::segment(1);
+@endphp
+
 <nav class="navbar-default navbar-static-side" role="navigation">
     <div class="sidebar-collapse">
         <ul class="nav metismenu" id="side-menu">
@@ -24,14 +28,21 @@
                 </div>
             </li>
 
-            <li class="">
-                <a href=""><i class="fa fa-user"></i> <span class="nav-label">QL Thành Viên</span>
-                    <span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level">
-                    <li><a href="{{ route('user.index') }}">QL Thành Viên</a></li>
-                    <li><a href="{{ route('user.catalogue.index') }}">QL Nhóm Thành Viên</a></li>
-                </ul>
-            </li>
+            @foreach (config('app.module.module') as $key => $item)
+                <li class="{{ $segment == $item['name'] ? 'active' : '' }}">
+                    <a href="#"><i class="{{ $item['icon'] }}"></i> <span
+                            class="nav-label">{{ $item['title'] }}</span>
+                        <span class="fa arrow"></span></a>
+
+                    <ul class="nav nav-second-level collapse in" style="">
+                        @foreach ($item['subModule'] as $child)
+                            <li class="{{ $segment == $child['title'] ? 'active' : '' }}">
+                                <a href="{{ $child['route'] }}">{{ $child['title'] }}</a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </li>
+            @endforeach
 
             {{-- <li>
                 <a href="layouts.html"><i class="fa fa-diamond"></i> <span class="nav-label">Layouts</span></a>
